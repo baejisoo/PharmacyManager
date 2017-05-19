@@ -1,7 +1,16 @@
-import httplib2
+import urllib.request
 
-http = httplib2.Http()
+class GetData:
 
-url = 'https://jsonplaceholder.typicode.com/posts/1'
-response, content = http.request(url, 'GET')
-print(content)
+    key= '5pNTeplk5p7OZJvaN66WO8U%2FX%2BNfJvN8o%2F6ZrqREeCY7skab0O2HJgP2kqbjK%2BXth3O%2FmEa8x4pkFcWgToLs9g%3D%3D'
+    url = "http://openapi2.e-gen.or.kr/openapi/service/rest/ErmctInsttInfoInqireService/getParmacyBassInfoInqire"
+
+    def main(self):
+        data = urllib.request.urlopen(self.url).read()
+        #print(data)
+        f = open("sample.xml", "wb")
+        f.write(data)
+        f.close()
+        g
+getData=GetData()
+getData.main()
