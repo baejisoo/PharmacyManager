@@ -11,6 +11,6 @@ class GetData:
         f = open("sample.xml", "wb")
         f.write(data)
         f.close()
-        g
+
 getData=GetData()
 getData.main()
