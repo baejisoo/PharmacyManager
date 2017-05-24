@@ -2,13 +2,12 @@ import urllib.request
 
 class GetData:
 
-    key= '5pNTeplk5p7OZJvaN66WO8U%2FX%2BNfJvN8o%2F6ZrqREeCY7skab0O2HJgP2kqbjK%2BXth3O%2FmEa8x4pkFcWgToLs9g%3D%3D'
-    url = "http://openapi2.e-gen.or.kr/openapi/service/rest/ErmctInsttInfoInqireService/getParmacyBassInfoInqire"
+    url = 'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyBassInfoInqire?ServiceKey=1td22cJml3Qk4BuSNgwhWXUk2xtS8zrLx0n0OfwQHdcn5HvvOvAv9UOJ6qSztOTbtrI5ODfdxzXhgvC5NJWxvQ%3D%3D'
 
     def main(self):
         data = urllib.request.urlopen(self.url).read()
         #print(data)
-        f = open("sample.xml", "wb")
+        f = open("sample2.xml", "wb")
         f.write(data)
         f.close()
 
