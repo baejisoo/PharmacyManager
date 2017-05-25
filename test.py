@@ -7,7 +7,7 @@ class GetData:
     def main(self):
         data = urllib.request.urlopen(self.url).read()
         #print(data)
-        f = open("sample2.xml", "wb")
+        f = open("sample.xml", "wb")
         f.write(data)
         f.close()
 
