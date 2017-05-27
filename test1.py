@@ -7,14 +7,14 @@ serviceKey = 'Lg8o2pi2x5AWT0RIJ5XkNewd%2BtSXe63rr5za624JyZiO1TiQpbdNmDhonlj1zFMu
 
 response = request.urlopen('http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyFullDown?'
                                 'serviceKey=Lg8o2pi2x5AWT0RIJ5XkNewd%2BtSXe63rr5za624JyZiO1TiQpbdNmDhonlj1zFMucI35WMs0idy66DCXSgi%2FvA%3D%3D'
-                                '&numOfRows=100&pageSize=100').read()
+                                '&numOfRows=1000&pageSize=1').read()
 tree = ElementTree.fromstring(response)
     #print(response)
 itemElements = tree.getiterator("item")
     #print(itemElements)
 for item in itemElements:
     age = item.find("dutyName")
-    print(age.text)
+
 
 
 

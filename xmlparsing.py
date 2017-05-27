@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 
 # parse xml file
-doc = ET.parse('sample.xml')
+doc = ET.parse('약국+위치정보+조회.xml')
 
 # get root node
 root = doc.getroot()
