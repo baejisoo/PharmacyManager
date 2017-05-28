@@ -36,7 +36,21 @@ def searchPharmacy():
         print(dutyName.text)
         print(dutyAddr.text)
 
-
+    sigunguNameKor = input("시/군/구 입력: ")
+    sigunguName = urllib.parse.quote(sigunguNameKor)
+    response_body = request.urlopen(
+        'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
+        + ServiceKey +
+        '&Q0=' + sidoName + '&Q1=' + sigunguName + '&QT=1&pageNo=1&numOfRows=10').read()
+    tree = ElementTree.fromstring(response_body)
+    print(response_body)
+    itemElements = tree.getiterator("item")
+    print(itemElements)
+    for item in itemElements:
+        dutyName = item.find("dutyName")
+        dutyAddr = item.find("dutyAddr")
+        print(dutyName.text)
+        print(dutyAddr.text)
 
 
 searchPharmacy()
