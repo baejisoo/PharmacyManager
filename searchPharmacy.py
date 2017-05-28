@@ -1,4 +1,5 @@
 from urllib import request
+import urllib.parse
 from xml.dom.minidom import *
 from xml.etree import ElementTree
 
@@ -16,14 +17,15 @@ def printPharmacy():
         dutyName = item.find("dutyName")
         print(dutyName.text)
 
+
 def searchPharmacy():
-    global sidoNum, sigunguNum
+    global sidoName, sigunguName
 
-    #sido = input("시/도 입력: ")
-
+    sidoNameKor = input("시/도 입력: ")
+    sidoName = urllib.parse.quote(sidoNameKor)
     response_body = request.urlopen('http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
-                                    'ServiceKey=1td22cJml3Qk4BuSNgwhWXUk2xtS8zrLx0n0OfwQHdcn5HvvOvAv9UOJ6qSztOTbtrI5ODfdxzXhgvC5NJWxvQ%3D%3D'
-                                    '&Q0=서울특별시&Q1=강남구&QT=1&QN=삼성약국&ORD=NAME&pageNo=1&numOfRows=10').read()
+                                    +ServiceKey+
+                                    '&Q0='+sidoName+'&QT=1&pageNo=1&numOfRows=10').read()
     tree = ElementTree.fromstring(response_body)
     print(response_body)
     itemElements = tree.getiterator("item")
@@ -33,6 +35,9 @@ def searchPharmacy():
         dutyAddr = item.find("dutyAddr")
         print(dutyName.text)
         print(dutyAddr.text)
+
+
+
 
 searchPharmacy()
 
