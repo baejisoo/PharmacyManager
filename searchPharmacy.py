@@ -29,7 +29,11 @@ def searchPharmacy():
 
     response_body = request.urlopen('http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
                                     +ServiceKey+
+<<<<<<< HEAD
                                     '&Q0='+sidoName+ '&Q1=' + sigunguName + '&pageNo=1&numOfRows=10').read()
+=======
+                                    '&Q0='+sidoName+ '&Q1=' + sigunguName + '&QT=1&pageNo=1&numOfRows=10').read()
+>>>>>>> origin/master
     tree = ElementTree.fromstring(response_body)
     print(response_body)
     itemElements = tree.getiterator("item")
@@ -50,6 +54,7 @@ def searchPharmacy():
         pharmacyName1 = pharmacyName
         pharmacyName = urllib.parse.quote(pharmacyName)
 
+<<<<<<< HEAD
         response_body = request.urlopen(
             'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
             + ServiceKey +
@@ -85,4 +90,6 @@ def searchPharmacy():
 
 
 
+=======
+>>>>>>> origin/master
 searchPharmacy()
