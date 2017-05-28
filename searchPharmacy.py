@@ -19,13 +19,17 @@ def printPharmacy():
 
 
 def searchPharmacy():
-    global sidoName, sigunguName
+    global sidoName, sigunguName, order, pharmacyName
 
     sidoNameKor = input("시/도 입력: ")
     sidoName = urllib.parse.quote(sidoNameKor)
+
+    sigunguNameKor = input("시/군/구 입력: ")
+    sigunguName = urllib.parse.quote(sigunguNameKor)
+
     response_body = request.urlopen('http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
                                     +ServiceKey+
-                                    '&Q0='+sidoName+'&QT=1&pageNo=1&numOfRows=10').read()
+                                    '&Q0='+sidoName+ '&Q1=' + sigunguName + '&pageNo=1&numOfRows=10').read()
     tree = ElementTree.fromstring(response_body)
     print(response_body)
     itemElements = tree.getiterator("item")
@@ -33,54 +37,52 @@ def searchPharmacy():
     for item in itemElements:
         dutyName = item.find("dutyName")
         dutyAddr = item.find("dutyAddr")
+        print(item.findtext("postCdn1"))
+        print(item.findtext("postCdn2"))
         print(dutyName.text)
         print(dutyAddr.text)
+
+    print("---------------------")
+    order = input("1. 인근 약국 찾기 2. 나가기: ")
+
+    if(order == '1'):
+        pharmacyName = input("약국 이름:")
+        pharmacyName1 = pharmacyName
+        pharmacyName = urllib.parse.quote(pharmacyName)
+
+        response_body = request.urlopen(
+            'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
+            + ServiceKey +
+            '&Q0=' + sidoName + '&Q1=' + sigunguName  + '&QN=' + pharmacyName+ '&pageNo=1&numOfRows=10').read()
+        tree = ElementTree.fromstring(response_body)
+        itemElements = tree.getiterator("item")
+        for item in itemElements:
+            post1 = int(item.findtext("postCdn1"))
+            post2 = int(item.findtext("postCdn2"))
+            post2 = post2 // 10
+            break
+
+        response_body = request.urlopen(
+            'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
+            + ServiceKey +
+            '&Q0=' + sidoName + '&Q1=' + sigunguName + '&ORD=ADDR&numOfRows=1000').read()
+        tree = ElementTree.fromstring(response_body)
+        itemElements = tree.getiterator("item")
+        count = 0
+        for item in itemElements:
+            post1_1 = int(item.findtext("postCdn1"))
+            post2_2 = int(item.findtext("postCdn2"))
+            post2_2 = post2_2 // 10
+            if(post1 == post1_1 and post2 == post2_2 and pharmacyName1 != item.findtext("dutyName")):
+                dutyName = item.find("dutyName")
+                dutyAddr = item.find("dutyAddr")
+                print(dutyName.text)
+                print(dutyAddr.text)
+                count+=1
+            if(count > 10):
+                break
 
 
 
 
 searchPharmacy()
-
-def searchShelter():
-    global sido_num, sigungu_num
-
-    print("==========보호소 검색==========")
-    sido = input("시/도를 입력하세요: ")
-
-    url_sido = 'http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/sido?' + ServiceKey
-    response = request.urlopen(url_sido).read()
-    #print(response)
-
-    tree = ElementTree.fromstring(response)
-    itemElements = tree.getiterator("item")
-    for item in itemElements:
-        name = item.find('orgdownNm')
-        sido_name = name.text
-        if sido_name == sido:
-            ret = item.find("orgCd")
-            sido_num = ret.text
-            #print(sido_num)
-
-    sigungu = input("시/군/구를 입력하세요: ")
-    url_sigungu = 'http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/sigungu?'+ServiceKey+'&upr_cd=' + sido_num
-    response = request.urlopen(url_sigungu).read()
-    #print(response)
-    tree = ElementTree.fromstring(response)
-    itemElements = tree.getiterator("item")
-    for item in itemElements:
-        name = item.find('orgdownNm')
-        sigungu_name = name.text
-        if sigungu_name == sigungu:
-            ret = item.find("orgCd")
-            sigungu_num = ret.text
-            #print(sido_num)
-
-    url_shelter = 'http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/shelter?'+ServiceKey+'&upr_cd='+sido_num+'&org_cd='+sigungu_num
-    response = request.urlopen(url_shelter).read()
-    #print(response)
-    tree = ElementTree.fromstring(response)
-    itemElements = tree.getiterator("item")
-    print('보호소 목록: ')
-    for item in itemElements:
-        name = item.find('careNm')
-        print(name.text)
