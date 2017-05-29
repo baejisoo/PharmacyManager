@@ -29,11 +29,7 @@ def searchPharmacy():
 
     response_body = request.urlopen('http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
                                     +ServiceKey+
-<<<<<<< HEAD
                                     '&Q0='+sidoName+ '&Q1=' + sigunguName + '&pageNo=1&numOfRows=10').read()
-=======
-                                    '&Q0='+sidoName+ '&Q1=' + sigunguName + '&QT=1&pageNo=1&numOfRows=10').read()
->>>>>>> origin/master
     tree = ElementTree.fromstring(response_body)
     print(response_body)
     itemElements = tree.getiterator("item")
@@ -41,8 +37,6 @@ def searchPharmacy():
     for item in itemElements:
         dutyName = item.find("dutyName")
         dutyAddr = item.find("dutyAddr")
-        print(item.findtext("postCdn1"))
-        print(item.findtext("postCdn2"))
         print(dutyName.text)
         print(dutyAddr.text)
 
@@ -54,19 +48,6 @@ def searchPharmacy():
         pharmacyName1 = pharmacyName
         pharmacyName = urllib.parse.quote(pharmacyName)
 
-<<<<<<< HEAD
-        response_body = request.urlopen(
-            'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
-            + ServiceKey +
-            '&Q0=' + sidoName + '&Q1=' + sigunguName  + '&QN=' + pharmacyName+ '&pageNo=1&numOfRows=10').read()
-        tree = ElementTree.fromstring(response_body)
-        itemElements = tree.getiterator("item")
-        for item in itemElements:
-            post1 = int(item.findtext("postCdn1"))
-            post2 = int(item.findtext("postCdn2"))
-            post2 = post2 // 10
-            break
-
         response_body = request.urlopen(
             'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
             + ServiceKey +
@@ -74,22 +55,18 @@ def searchPharmacy():
         tree = ElementTree.fromstring(response_body)
         itemElements = tree.getiterator("item")
         count = 0
+        bool = False
         for item in itemElements:
-            post1_1 = int(item.findtext("postCdn1"))
-            post2_2 = int(item.findtext("postCdn2"))
-            post2_2 = post2_2 // 10
-            if(post1 == post1_1 and post2 == post2_2 and pharmacyName1 != item.findtext("dutyName")):
+            if(pharmacyName1 == item.findtext("dutyName")):
+                bool = True
+            if(bool == 1 and pharmacyName1 != item.findtext("dutyName")):
                 dutyName = item.find("dutyName")
                 dutyAddr = item.find("dutyAddr")
                 print(dutyName.text)
                 print(dutyAddr.text)
                 count+=1
             if(count > 10):
+                bool = False
                 break
 
-
-
-
-=======
->>>>>>> origin/master
 searchPharmacy()
