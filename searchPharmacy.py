@@ -1,3 +1,4 @@
+
 from urllib import request
 import urllib.parse
 from xml.dom.minidom import *
@@ -19,7 +20,7 @@ def printPharmacy():
 
 
 def searchPharmacy():
-    global sidoName, sigunguName, order, pharmacyName
+    global sidoName, sigunguName, day, order, pharmacyName
 
     sidoNameKor = input("시/도 입력: ")
     sidoName = urllib.parse.quote(sidoNameKor)
@@ -27,9 +28,28 @@ def searchPharmacy():
     sigunguNameKor = input("시/군/구 입력: ")
     sigunguName = urllib.parse.quote(sigunguNameKor)
 
+    dayKor = input("영업 요일 입력(월/화/수/목/금/토/일/공휴일): ")
+    if(dayKor=="월"):
+        dayKor = "1"
+    elif(dayKor == "화"):
+        dayKor ="2"
+    elif(dayKor == "수"):
+        dayKor = "3"
+    elif(dayKor == "목"):
+        dayKor = "4"
+    elif(dayKor == "금"):
+        dayKor = "5"
+    elif (dayKor == "토"):
+        dayKor = "6"
+    elif(dayKor == "일"):
+        dayKor = "7"
+    elif (dayKor == "공휴일"):
+        dayKor = "8"
+    day=urllib.parse.quote(dayKor)
+
     response_body = request.urlopen('http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
                                     +ServiceKey+
-                                    '&Q0='+sidoName+ '&Q1=' + sigunguName + '&pageNo=1&numOfRows=10').read()
+                                    '&Q0='+sidoName+ '&Q1=' + sigunguName + '&QT='+day +'&pageNo=1&numOfRows=20').read()
     tree = ElementTree.fromstring(response_body)
     print(response_body)
     itemElements = tree.getiterator("item")
@@ -37,8 +57,11 @@ def searchPharmacy():
     for item in itemElements:
         dutyName = item.find("dutyName")
         dutyAddr = item.find("dutyAddr")
-        print(dutyName.text)
-        print(dutyAddr.text)
+        dutyTimeS = item.find("dutyTime"+day+"s")
+        dutyTimeC = item.find("dutyTime"+day+"c")
+        print("약국 이름: " + dutyName.text)
+        print("약국 주소: " + dutyAddr.text)
+        print("약국 영업 시간: " + dutyTimeS.text+"~" + dutyTimeC.text)
 
     print("---------------------")
     order = input("1. 인근 약국 찾기 2. 나가기: ")
@@ -62,12 +85,16 @@ def searchPharmacy():
             if(bool == 1 and pharmacyName1 != item.findtext("dutyName")):
                 dutyName = item.find("dutyName")
                 dutyAddr = item.find("dutyAddr")
-                print(dutyName.text)
-                print(dutyAddr.text)
+                dutyTimeS = item.find("dutyTime" + day + "s")
+                dutyTimeC = item.find("dutyTime" + day + "c")
+                print("약국 이름: " + dutyName.text)
+                print("약국 주소: " + dutyAddr.text)
+                print("약국 영업 시간: " + dutyTimeS.text + "~" + dutyTimeC.text)
                 count+=1
             if(count > 10):
                 bool = False
                 break
 
-searchPharmacy()
+while(1):
+    searchPharmacy()
 
