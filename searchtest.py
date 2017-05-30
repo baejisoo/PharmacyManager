@@ -3,6 +3,9 @@ from xml.dom.minidom import *
 from xml.etree import ElementTree
 
 
+
+
+
 serviceKey = 'Lg8o2pi2x5AWT0RIJ5XkNewd%2BtSXe63rr5za624JyZiO1TiQpbdNmDhonlj1zFMucI35WMs0idy66DCXSgi%2FvA%3D%3D'
 
 response = request.urlopen('http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
