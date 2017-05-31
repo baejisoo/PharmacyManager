@@ -61,7 +61,8 @@ def searchPharmacy():
         dutyTimeC = item.find("dutyTime"+day+"c")
         print("약국 이름: " + dutyName.text)
         print("약국 주소: " + dutyAddr.text)
-        print("약국 영업 시간: " + dutyTimeS.text+"~" + dutyTimeC.text)
+        if (item.find("dutyTime" + day + "s") != None and item.find("dutyTime" + day + "c") != None):
+            print("약국 영업 시간: " + dutyTimeS.text+"~" + dutyTimeC.text)
 
     print("---------------------")
     order = input("1. 인근 약국 찾기 2. 나가기: ")
@@ -74,7 +75,7 @@ def searchPharmacy():
         response_body = request.urlopen(
             'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
             + ServiceKey +
-            '&Q0=' + sidoName + '&Q1=' + sigunguName + '&ORD=ADDR&numOfRows=1000').read()
+            '&Q0=' + sidoName + '&Q1=' + sigunguName + '&ORD=ADDR&numOfRows=500').read()
         tree = ElementTree.fromstring(response_body)
         itemElements = tree.getiterator("item")
         count = 0
@@ -89,7 +90,8 @@ def searchPharmacy():
                 dutyTimeC = item.find("dutyTime" + day + "c")
                 print("약국 이름: " + dutyName.text)
                 print("약국 주소: " + dutyAddr.text)
-                print("약국 영업 시간: " + dutyTimeS.text + "~" + dutyTimeC.text)
+                if(item.find("dutyTime" + day + "s") != None and item.find("dutyTime" + day + "c") != None):
+                    print("약국 영업 시간: " + dutyTimeS.text + "~" + dutyTimeC.text)
                 count+=1
             if(count > 10):
                 bool = False
