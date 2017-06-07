@@ -1,4 +1,4 @@
-
+from PyQt4.QtGui import *
 from urllib import request
 import urllib.parse
 from xml.dom.minidom import *
