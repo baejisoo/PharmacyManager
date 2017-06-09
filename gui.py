@@ -7,9 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import *
-import sys
-
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -94,8 +91,3 @@ class Ui_Form(object):
         self.comboBox.setItemText(6, _translate("Form", "일", None))
         self.comboBox.setItemText(7, _translate("Form", "공휴일", None))
 
-
-app = QApplication(sys.argv)
-dlg = Ui_Form()
-dlg.show()
-app.exec_()
