@@ -9,6 +9,7 @@ from xml.etree import ElementTree
 
 ServiceKey = 'ServiceKey=1td22cJml3Qk4BuSNgwhWXUk2xtS8zrLx0n0OfwQHdcn5HvvOvAv9UOJ6qSztOTbtrI5ODfdxzXhgvC5NJWxvQ%3D%3D'
 # MyDiag 모듈 안의 Ui_MyDialog 클래스로부터 파생
+
 class XDialog(QDialog, MyDiag.Ui_Form):
     def __init__(self):
         QDialog.__init__(self)
