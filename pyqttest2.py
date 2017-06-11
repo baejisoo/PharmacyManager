@@ -16,6 +16,7 @@ class XDialog(QDialog, MyDiag.Ui_Form):
         self.setupUi(self)
 
         self.pushButton_5.clicked.connect(self.editName)
+        self.pushButton.clicked.connect(self.savePharmacy)
 
     def editName(self):
         global sidoName, sigunguName, day, order, pharmacyName
@@ -58,10 +59,12 @@ class XDialog(QDialog, MyDiag.Ui_Form):
             dutyAddr = item.find("dutyAddr")
             dutyTimeS = item.find("dutyTime" + day + "s")
             dutyTimeC = item.find("dutyTime" + day + "c")
-            print("약국 이름: " + dutyName.text)
-            print("약국 주소: " + dutyAddr.text)
-            if (item.find("dutyTime" + day + "s") != None and item.find("dutyTime" + day + "c") != None):
-                print("약국 영업 시간: " + dutyTimeS.text + "~" + dutyTimeC.text)
+            self.listWidget.addItem("약국 이름: " + dutyName.text +'\n'+
+                                        "약국 주소: " + dutyAddr.text)
+
+    def savePharmacy(self):
+        print(self.listWidget.currentRow().text)
+
 
 
 app = QApplication(sys.argv)
