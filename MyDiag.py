@@ -69,6 +69,9 @@ class Ui_Form(object):
         self.comboBox.addItem(_fromUtf8(""))
         self.comboBox.addItem(_fromUtf8(""))
         self.comboBox.addItem(_fromUtf8(""))
+        self.pushButton_5 = QtGui.QPushButton(Form)
+        self.pushButton_5.setGeometry(QtCore.QRect(100, 190, 101, 41))
+        self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -90,4 +93,5 @@ class Ui_Form(object):
         self.comboBox.setItemText(5, _translate("Form", "토", None))
         self.comboBox.setItemText(6, _translate("Form", "일", None))
         self.comboBox.setItemText(7, _translate("Form", "공휴일", None))
+        self.pushButton_5.setText(_translate("Form", "찾기", None))
 

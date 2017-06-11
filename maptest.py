@@ -1,24 +1,37 @@
-import webbrowser
-from PyQt4.QtGui import *
+from tkinter import*
+
+T =Tk()
+T.mainloop()
 
 
+def InitSortListBox():
+    global SortListBox
 
-class MyDialog(QDialog):
-    def __init__(self):
-        QDialog.__init__(self)
+    SortListBoxScrollbar = Scrollbar(g_Tk)
 
-        lblName = QLabel("Name")
-        self.editName = QLineEdit()
-        btnOk = QPushButton("OK")
+    SortListBoxScrollbar.pack()
 
-        layout = QVBoxLayout()
-        layout.addWidget(lblName)
-        layout.addWidget(self.editName)
-        layout.addWidget(btnOk)
-        self.setLayout(layout)
+    SortListBoxScrollbar.place(x=150, y=160)
 
-        btnOk.clicked.connect(self.btnOkClicked)
+    TempFont = font.Font(g_Tk, size=15, weight='bold', family='Consolas')
 
-    def btnOkClicked(self):
-        name = self.editName.text()
-        QMessageBox.information(self, "Info", name)
+    SortListBox = Listbox(g_Tk, font=TempFont, activestyle='none',
+
+                          width=10, height=1, borderwidth=12, relief='ridge',
+
+                          yscrollcommand=SortListBoxScrollbar.set)
+
+    SortListBox.insert(1, "시설명")
+
+    SortListBox.insert(2, "주소")
+
+    SortListBox.insert(3, "연락처")
+
+    SortListBox.pack()
+
+    SortListBox.place(x=10, y=160)
+
+    SortListBoxScrollbar.config(command=SortListBox.yview)
+
+
+InitSortListBox()
