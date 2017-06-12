@@ -7,7 +7,6 @@ from urllib import request
 import urllib.parse
 from xml.dom.minidom import *
 from xml.etree import ElementTree
-import folium
 #sendMail 모듈
 import mimetypes
 import mysmtplib
@@ -15,6 +14,7 @@ from urllib import request, parse
 import webbrowser
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
+import folium
 
 ServiceKey = 'ServiceKey=1td22cJml3Qk4BuSNgwhWXUk2xtS8zrLx0n0OfwQHdcn5HvvOvAv9UOJ6qSztOTbtrI5ODfdxzXhgvC5NJWxvQ%3D%3D'
 # MyDiag 모듈 안의 Ui_MyDialog 클래스로부터 파생
@@ -136,7 +136,7 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
 
     def searchNearby(self):
         self.listWidget.clear()
-        global line, sidoName, sigunguName, day, order, pharmacyName, x, y
+        global line, sidoName, sigunguName, day, order, pharmacyName, x, y, address
         pharmacyName = line[0]
         pharmacyName1 = pharmacyName
         pharmacyName = urllib.parse.quote(pharmacyName)
@@ -153,6 +153,10 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
             if (pharmacyName1 == item.findtext("dutyName")):
                 x = item.find("wgs84Lon")
                 y = item.find("wgs84Lat")
+<<<<<<< HEAD
+=======
+                address = item.find("dutyAddr")
+>>>>>>> origin/master
                 bool = True
             if (bool == 1 and pharmacyName1 != item.findtext("dutyName")):
                 for item in itemElements:
@@ -166,22 +170,14 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
                 break
 
     def findMap(self):
-        global x, y
-        address = parse.quote(loc)
-        url = "http://api.vworld.kr/req/address?service=address&version=2.0&request=getcoord&key=483E0418-2F46-3223-80A1-F66D16A24685&format=xml&type=road&address=" + str(
-            address) + "&refine=true&simple=false&crs=epsg:4326"
-        res = request.urlopen(url).read()
-        tree = ElementTree.fromstring(res)
-        itemElements = tree.getiterator("point")
-        print(res)
-        for item in itemElements:
-            x = item.find('x')
-            y = item.find('y')
+        global x, y, address
+        x = x.text
+        y = y.text
 
         # 위도 경도 지정
-        map_osm = folium.Map(location=[y.text, x.text], zoom_start=13)
+        map_osm = folium.Map(location=[y, x], zoom_start=13)
         # 마커 지정
-        folium.Marker([y.text, x.text], popup='Mt. Hood Meadows').add_to(map_osm)
+        folium.Marker([y, x], popup='Mt. Hood Meadows').add_to(map_osm)
         # html 파일로 저장
         map_osm.save('osm.html')
 
