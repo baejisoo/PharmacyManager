@@ -32,7 +32,7 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
         # global
         host = "smtp.gmail.com"  # Gmail STMP 서버 주소.
         port = "587"
-        htmlFileName = "logo.html"
+        #htmlFileName = "logo.html"
 
         senderAddr = self.lineEdit_3.text()  # 보내는 사람 email 주소.
         senderPw = self.lineEdit_4.text()
@@ -49,23 +49,22 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
         msg['To'] = recipientAddr
 
         # MIME 문서를 생성합니다.
-        htmlFD = open(htmlFileName, 'rb')
-        HtmlPart = MIMEText(htmlFD.read(), 'html', _charset='UTF-8')
-        htmlFD.close()
+        #htmlFD = open(htmlFileName, 'rb')
+        #HtmlPart = MIMEText(htmlFD.read(), 'html', _charset='UTF-8')
+        #htmlFD.close()
 
         body = ("This is a test sending email through python")
-        print(type(body))
         bodyPart = MIMEText(body.encode('utf-8'), 'plain', 'UTF-8')
 
-        #msgPharmacy = MIMEText(value.encode('utf-8'),_charset='UTF-8')
+        msgPharmacy = MIMEText(value.encode('utf-8'),_charset='UTF-8')
         #msgPart=MIMEText(msgtext,('plain'))
 
         # 만들었던 mime을 MIMEBase에 첨부 시킨다.
         #msg.attach(HtmlPart)
 
         #msg.attach(msgPart)
-        msg.attach(bodyPart)
-        #msg.attach(msgPharmacy)
+        #msg.attach(bodyPart)
+        msg.attach(msgPharmacy)
 
         # 메일을 발송한다.
         s = mysmtplib.MySMTP(host, port)
