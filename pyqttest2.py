@@ -21,13 +21,12 @@ class XDialog(QDialog, MyDiag.Ui_Form):
 
     def editName(self):
         global sidoName, sigunguName, day, order, pharmacyName
+        self.listWidget.clear()
         sidoNameKor = self.lineEdit.text()
         sidoName = urllib.parse.quote(sidoNameKor)
-        print(sidoNameKor)
 
         sigunguNameKor = self.lineEdit_2.text()
         sigunguName = urllib.parse.quote(sigunguNameKor)
-        print(sigunguNameKor)
 
         dayKor = self.comboBox.currentText()
         if (dayKor == "월"):
@@ -47,7 +46,6 @@ class XDialog(QDialog, MyDiag.Ui_Form):
         elif (dayKor == "공휴일"):
             dayKor = "8"
         day = urllib.parse.quote(dayKor)
-        print(dayKor)
 
         response_body = request.urlopen(
             'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
@@ -64,7 +62,7 @@ class XDialog(QDialog, MyDiag.Ui_Form):
                                         "약국 주소: " + dutyAddr.text)
 
     def savePharmacy(self):
-        print(self.listWidget.currentRow().text)
+        print(self.listWidget.currentRow())
 
 
 
