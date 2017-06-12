@@ -1,3 +1,4 @@
+
 from PyQt4.QtGui import *
 import sys
 # MyDiag.py 모듈 import
@@ -150,8 +151,8 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
         bool = False
         for item in itemElements:
             if (pharmacyName1 == item.findtext("dutyName")):
-                x = item.fine("wgs84Lon")
-                y = item.fine("wgs84Lat")
+                x = item.find("wgs84Lon")
+                y = item.find("wgs84Lat")
                 bool = True
             if (bool == 1 and pharmacyName1 != item.findtext("dutyName")):
                 for item in itemElements:
