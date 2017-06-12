@@ -6,10 +6,12 @@ from urllib import request
 import urllib.parse
 from xml.dom.minidom import *
 from xml.etree import ElementTree
-
+import folium
 #sendMail 모듈
 import mimetypes
 import mysmtplib
+from urllib import request, parse
+import webbrowser
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 
@@ -25,6 +27,8 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
         self.pushButton_4.clicked.connect(self.sendMail)
         self.pushButton_5.clicked.connect(self.editName)
         self.pushButton.clicked.connect(self.savePharmacy)
+        self.pushButton_2.clicked.connect(self.searchNearby)
+        self.pushButton_3.clicked.connect(self.findMap)
 
 
     def sendMail(self):
@@ -78,6 +82,7 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
         print("Mail sending complete!!!")
 
     def editName(self):
+        self.listWidget.clear()
         global sidoName, sigunguName, day, order, pharmacyName
         sidoNameKor = self.lineEdit.text()
         sidoName = urllib.parse.quote(sidoNameKor)
@@ -118,17 +123,70 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
             dutyAddr = item.find("dutyAddr")
             dutyTimeS = item.find("dutyTime" + day + "s")
             dutyTimeC = item.find("dutyTime" + day + "c")
-            self.listWidget.addItem("약국 이름: " + dutyName.text +'\n'+
-                                        "약국 주소: " + dutyAddr.text)
+            self.listWidget.addItem( dutyName.text +'\n'+
+                                         dutyAddr.text)
 
     def savePharmacy(self):
-        print(self.listWidget.currentRow().text)
-
-    def selectPharmacy(self):
-        global value
+        global value, line
         item = self.listWidget.currentItem()
         value = item.text()
-        print(value)
+        line = value.splitlines()
+
+
+    def searchNearby(self):
+        self.listWidget.clear()
+        global line, sidoName, sigunguName, day, order, pharmacyName, x, y
+        pharmacyName = line[0]
+        pharmacyName1 = pharmacyName
+        pharmacyName = urllib.parse.quote(pharmacyName)
+
+        response_body = request.urlopen(
+            'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
+            + ServiceKey +
+            '&Q0=' + sidoName + '&Q1=' + sigunguName + '&ORD=ADDR&numOfRows=500').read()
+        tree = ElementTree.fromstring(response_body)
+        itemElements = tree.getiterator("item")
+        count = 0
+        bool = False
+        for item in itemElements:
+            if (pharmacyName1 == item.findtext("dutyName")):
+                x = item.fine("wgs84Lon")
+                y = item.fine("wgs84Lat")
+                bool = True
+            if (bool == 1 and pharmacyName1 != item.findtext("dutyName")):
+                for item in itemElements:
+                    dutyName = item.find("dutyName")
+                    dutyAddr = item.find("dutyAddr")
+                    self.listWidget.addItem(dutyName.text + '\n' +
+                                            dutyAddr.text)
+                count += 1
+            if (count > 10):
+                bool = False
+                break
+
+    def findMap(self):
+        global x, y
+        address = parse.quote(loc)
+        url = "http://api.vworld.kr/req/address?service=address&version=2.0&request=getcoord&key=483E0418-2F46-3223-80A1-F66D16A24685&format=xml&type=road&address=" + str(
+            address) + "&refine=true&simple=false&crs=epsg:4326"
+        res = request.urlopen(url).read()
+        tree = ElementTree.fromstring(res)
+        itemElements = tree.getiterator("point")
+        print(res)
+        for item in itemElements:
+            x = item.find('x')
+            y = item.find('y')
+
+        # 위도 경도 지정
+        map_osm = folium.Map(location=[y.text, x.text], zoom_start=13)
+        # 마커 지정
+        folium.Marker([y.text, x.text], popup='Mt. Hood Meadows').add_to(map_osm)
+        # html 파일로 저장
+        map_osm.save('osm.html')
+
+        # 지도 열기
+        webbrowser.open('osm.html')
+
 
 
 app = QApplication(sys.argv)
