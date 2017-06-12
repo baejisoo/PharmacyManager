@@ -13,6 +13,7 @@ from urllib import request, parse
 import webbrowser
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
+import folium
 
 ServiceKey = 'ServiceKey=1td22cJml3Qk4BuSNgwhWXUk2xtS8zrLx0n0OfwQHdcn5HvvOvAv9UOJ6qSztOTbtrI5ODfdxzXhgvC5NJWxvQ%3D%3D'
 # MyDiag 모듈 안의 Ui_MyDialog 클래스로부터 파생
@@ -134,7 +135,7 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
 
     def searchNearby(self):
         self.listWidget.clear()
-        global line, sidoName, sigunguName, day, order, pharmacyName, x, y
+        global line, sidoName, sigunguName, day, order, pharmacyName, x, y, address
         pharmacyName = line[0]
         pharmacyName1 = pharmacyName
         pharmacyName = urllib.parse.quote(pharmacyName)
@@ -151,6 +152,7 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
             if (pharmacyName1 == item.findtext("dutyName")):
                 x = item.find("wgs84Lon")
                 y = item.find("wgs84Lat")
+                address = item.find("dutyAddr")
                 bool = True
             if (bool == 1 and pharmacyName1 != item.findtext("dutyName")):
                 for item in itemElements:
@@ -164,11 +166,19 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
                 break
 
     def findMap(self):
-        global x, y
-        x1 = urllib.parse.quote(x)
-        y1 = urllib.parse.quote(y)
-        url = 'http://map.daum.net/link/map/' + x1 +',' +y1
-        webbrowser.open(url)
+        global x, y, address
+        x = x.text
+        y = y.text
+
+        # 위도 경도 지정
+        map_osm = folium.Map(location=[y, x], zoom_start=13)
+        # 마커 지정
+        folium.Marker([y, x], popup='Mt. Hood Meadows').add_to(map_osm)
+        # html 파일로 저장
+        map_osm.save('osm.html')
+
+        # 지도 열기
+        webbrowser.open('osm.html')
 
 
 
