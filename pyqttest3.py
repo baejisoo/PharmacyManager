@@ -6,7 +6,6 @@ from urllib import request
 import urllib.parse
 from xml.dom.minidom import *
 from xml.etree import ElementTree
-import folium
 #sendMail 모듈
 import mimetypes
 import mysmtplib
@@ -150,8 +149,8 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
         bool = False
         for item in itemElements:
             if (pharmacyName1 == item.findtext("dutyName")):
-                x = item.fine("wgs84Lon")
-                y = item.fine("wgs84Lat")
+                x = item.find("wgs84Lon")
+                y = item.find("wgs84Lat")
                 bool = True
             if (bool == 1 and pharmacyName1 != item.findtext("dutyName")):
                 for item in itemElements:
@@ -166,26 +165,10 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
 
     def findMap(self):
         global x, y
-        address = parse.quote(loc)
-        url = "http://api.vworld.kr/req/address?service=address&version=2.0&request=getcoord&key=483E0418-2F46-3223-80A1-F66D16A24685&format=xml&type=road&address=" + str(
-            address) + "&refine=true&simple=false&crs=epsg:4326"
-        res = request.urlopen(url).read()
-        tree = ElementTree.fromstring(res)
-        itemElements = tree.getiterator("point")
-        print(res)
-        for item in itemElements:
-            x = item.find('x')
-            y = item.find('y')
-
-        # 위도 경도 지정
-        map_osm = folium.Map(location=[y.text, x.text], zoom_start=13)
-        # 마커 지정
-        folium.Marker([y.text, x.text], popup='Mt. Hood Meadows').add_to(map_osm)
-        # html 파일로 저장
-        map_osm.save('osm.html')
-
-        # 지도 열기
-        webbrowser.open('osm.html')
+        x1 = urllib.parse.quote(x)
+        y1 = urllib.parse.quote(y)
+        url = 'http://map.daum.net/link/map/' + x1 +',' +y1
+        webbrowser.open(url)
 
 
 
