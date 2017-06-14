@@ -128,11 +128,27 @@ class XDialog(QDialog, MyDiag_gmail.Ui_Form):
                                          dutyAddr.text)
 
     def savePharmacy(self):
-        global value, line
+        global value, line, sidoName, sigunguName, day, order, pharmacyName, x, y, address
         item = self.listWidget.currentItem()
         value = item.text()
         line = value.splitlines()
+        pharmacyName = line[0]
+        pharmacyName1 = pharmacyName
+        pharmacyName = urllib.parse.quote(pharmacyName)
 
+        response_body = request.urlopen(
+            'http://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyListInfoInqire?'
+            + ServiceKey +
+            '&Q0=' + sidoName + '&Q1=' + sigunguName + '&ORD=ADDR&numOfRows=500').read()
+        tree = ElementTree.fromstring(response_body)
+        itemElements = tree.getiterator("item")
+        count = 0
+        bool = False
+        for item in itemElements:
+            if (pharmacyName1 == item.findtext("dutyName")):
+                x = item.find("wgs84Lon")
+                y = item.find("wgs84Lat")
+                address = item.find("dutyAddr")
 
     def searchNearby(self):
         self.listWidget.clear()
